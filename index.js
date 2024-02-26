@@ -1,38 +1,110 @@
-const inputBox = document.getElementById("input-box");
-const listContainer = document.getElementById("List-container");
+let todos = []
+const ul = document.createElement("ul")
+const form = document.getElementById("add-todo")
+const deleteAllBtn = document.getElementById("delete-all")
 
-function addTask() {
-    if(inputBox.value === ''){
-        alert("You must write something!");
-    }
-    else{
-        let li = document.createElement("li");
-        li.innerHTML = inputBox.value;
-        listContainer.appendChild(li);
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        li.appendChild(span);
-    }
-    inputBox.value = "";
-    saveData();
+function renderTodos(array) {
+    ul.innerHTML = ""
+    const container = document.querySelector(".container")
+    
+    ul.classList.add("todos")
+    container.appendChild(ul)
+
+array.forEach((task) => {
+    console.log("task:",task)
+  const li = document.createElement("li")
+  const span = document.createElement("span") 
+
+  const deleteBtn = document.createElement("button")
+  deleteBtn.textContent = "Delete"
+  deleteBtn.classList.add("btn", "delete-btn")
+    
+  deleteBtn.addEventListener("click", (e) => {
+    const selectedTodo = e.target.previousSibling.textContent
+
+    removeTodo(selectedTodo)
+  })
+
+  renderDeleteBtn(li)
+  li.classList.add("todo")
+  span.textContent = task
+
+  li.appendChild(span)  
+  li.appendChild(deleteBtn)
+  ul.appendChild(li)
+    })
 }
 
-listContainer.addEventListener("click", function (e){
-    if(e.target.tagName === "li") {
-        e.target.classList.toggle("checked");
-    } 
-    else if(e.target.tagName === "span"){
-        e.target.parentElement.remove();
-        saveData();
-    }
-}, false); 
+    function renderDeleteBtn() {
+    const deleteBtn = document.createElement("button")
+    deleteBtn.textContent = "Delete"
+    deleteBtn.addEventListener = ("click",(e) => {
+    const selectedTodo = e.target.previousSibling.textContent
 
-function saveData(){
-    localStorage.setItem("data", listContainer.innerHTML);
-}  
-
-function showTask(){
-    listContainer.innerHTML = localStorage.getItem("data");
+        removeTodo(selectedTodo)
+    })
 }
 
-showTask();
+function addTodo(value) {
+    const ul = document.querySelector(".todos")
+    const li = document.createElement("li")
+    const span = document.createElement("span")
+    const deleteBtn = document.createElement("button")
+    
+    deleteBtn.textContent = "Delete"
+    deleteBtn.classList.add("btn","delete-btn")
+    deleteBtn.addEventListener("click", (e) => {
+        const selectedTodo = e.target.previousSibling.textContent
+        removeTodo(selectedTodo)
+    })
+
+    todos.push(value)
+
+    li.classList.add("todo")
+    span.textContent = value
+
+    li.appendChild(span)
+    li.appendChild(deleteBtn)
+    ul.appendChild(li)
+    }
+
+//const addTodoBtn = document.querySelector("#submit-btn")
+//console.log("addTodoBtn:",addTodoBtn)
+
+//addTodoBtn.addEventListener("click",function () {
+    
+
+//const value = document.querySelector(".todo-input")
+//const ul = document.querySelector(".todos")
+
+//const li = document.createElement('li')
+    //li.classList.add("todo")
+    //li.textContent = value
+
+   // ul.appendChild(li) 
+//})
+
+function removeTodo(selectedTodo) {
+   const filteredTodo = todos.filter((todo)=> {
+    return todo !== selectedTodo
+    })
+    ul.innerHTML = ""
+
+    todos = filteredTodo 
+    renderTodos(filteredTodo)
+}
+
+form.addEventListener("submit", (e) => {
+    const value = document.querySelector(".todo-input").value
+    addTodo(value)
+    
+    e.preventDefault()
+    })
+
+deleteAllBtn.addEventListener("click", () => {
+    todos = []
+    renderTodos(todos)
+})    
+window.addEventListener("load", () => {
+    renderTodos(todos)
+})
