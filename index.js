@@ -1,4 +1,14 @@
-let todos = []
+let todos = [
+    {
+        title: "walk more",
+        description: "10 mins walk"
+    },
+    {
+        title: "take a break",
+        description: "go outside and touch grass!"
+    },
+
+]
 const ul = document.createElement("ul")
 const form = document.getElementById("add-todo")
 const deleteAllBtn = document.getElementById("delete-all")
@@ -11,25 +21,29 @@ function renderTodos(array) {
     container.appendChild(ul)
 
 array.forEach((task) => {
-    console.log("task:",task)
   const li = document.createElement("li")
-  const span = document.createElement("span") 
+  const title = document.createElement("span")
+  const description = document.createElement("p")
+    const deleteBtn = document.createElement("button")
 
-  const deleteBtn = document.createElement("button")
   deleteBtn.textContent = "Delete"
   deleteBtn.classList.add("btn", "delete-btn")
-    
+
   deleteBtn.addEventListener("click", (e) => {
-    const selectedTodo = e.target.previousSibling.textContent
+    const todo = e.target.parentNode
+    const selectedTodo = todo.querySelector("span").textContent
+    
 
     removeTodo(selectedTodo)
   })
 
   renderDeleteBtn(li)
-  li.classList.add("todo")
-  span.textContent = task
 
-  li.appendChild(span)  
+  li.classList.add("todo")
+  title.textContent = task.title
+  description.textContent = task.description
+
+  li.append(title, description)
   li.appendChild(deleteBtn)
   ul.appendChild(li)
     })
@@ -48,22 +62,34 @@ array.forEach((task) => {
 function addTodo(value) {
     const ul = document.querySelector(".todos")
     const li = document.createElement("li")
-    const span = document.createElement("span")
+    const title = document.createElement("span")
+    const description = document.createElement("p")
     const deleteBtn = document.createElement("button")
+    const todo = {
+        title: value,
+        description:"to be changed"
+    }
     
     deleteBtn.textContent = "Delete"
     deleteBtn.classList.add("btn","delete-btn")
+    
     deleteBtn.addEventListener("click", (e) => {
-        const selectedTodo = e.target.previousSibling.textContent
+        const todo = e.target.parentNode
+        const selectedTodo = todo.querySelector("span").textContent
+        
         removeTodo(selectedTodo)
     })
 
-    todos.push(value)
+    todos.push(todo)
+    
+    
 
     li.classList.add("todo")
-    span.textContent = value
+    title.textContent = todo.title
+    description.textContent = todo.description
 
-    li.appendChild(span)
+    li.appendChild(title)
+    li.appendChild(description)
     li.appendChild(deleteBtn)
     ul.appendChild(li)
     }
@@ -86,13 +112,26 @@ function addTodo(value) {
 
 function removeTodo(selectedTodo) {
    const filteredTodo = todos.filter((todo)=> {
-    return todo !== selectedTodo
+    return todo.title !== selectedTodo
     })
-    ul.innerHTML = ""
+    
 
     todos = filteredTodo 
     renderTodos(filteredTodo)
 }
+
+function checkBox(selectedTodo) {
+    let checkBox = document.getElementById("checklist");
+    let text = document.getElementById("text");
+
+    if(checkBox.checked == true){
+        text.style.display = "block";
+    } else {
+        text.style.display = "none";
+    }
+} 
+    
+    
 
 form.addEventListener("submit", (e) => {
     const value = document.querySelector(".todo-input").value
