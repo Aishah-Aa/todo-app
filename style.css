@@ -52,3 +52,7 @@
  .todo span {
    margin-right: 10px;
  }
+
+ .task {
+  list-style: none;
+ }
